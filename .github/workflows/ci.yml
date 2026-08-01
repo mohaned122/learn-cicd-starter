@@ -21,5 +21,5 @@ jobs:
       - name: Force Failure
         run: go test -cover ./...
       
-      - name: formate test
-      - run: test -z $(go fmt ./...)
+      - name: Check formatting
+        run: test -z "$(go fmt ./...)"
