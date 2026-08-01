@@ -4,9 +4,6 @@ on:
   pull_request:
     branches: [main]
 
-permissions:
-  contents: read
-
 jobs:
   tests:
     name: Tests
@@ -24,6 +21,12 @@ jobs:
       - name: Run unit tests
         run: go test ./... -cover
 
+      - name: Install gosec
+        run: go install github.com/securego/gosec/v2/cmd/gosec@latest
+
+      - name: Run gosec
+        run: gosec ./...
+
   style:
     name: Style
     runs-on: ubuntu-latest
@@ -38,13 +41,10 @@ jobs:
           go-version: "1.25.1"
 
       - name: Check formatting
-        run: test -z "$(find . -name '*.go' -not -path './vendor/*' -exec gofmt -l {} +)"
+        run: test -z $(go fmt ./...)
 
       - name: Install staticcheck
         run: go install honnef.co/go/tools/cmd/staticcheck@latest
 
       - name: Run staticcheck
-        run: $(go env GOPATH)/bin/staticcheck ./...
-
-      - name: Install gosec
-        run: go install github.com/securego/gosec/v2/cmd/gosec@v2.27.1
+        run: staticcheck ./...
