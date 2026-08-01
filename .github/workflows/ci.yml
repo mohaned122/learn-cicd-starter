@@ -2,9 +2,7 @@ name: ci
 
 on:
   pull_request:
-    branches: [main,addtests]
-
-  workflow_dispatch:
+    branches: [main]
 
 jobs:
   tests:
@@ -18,10 +16,23 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.26.0"
+          go-version: "1.25.1"
 
-      - name: Force Failure
-        run: go test -cover ./...
-      
+      - name: Run unit tests
+        run: go test ./... -cover
+
+  style:
+    name: Style
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.25.1"
+
       - name: Check formatting
-        run: test -z "$(go fmt ./...)"
+        run: test -z $(go fmt ./...)
