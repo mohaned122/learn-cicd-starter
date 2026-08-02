@@ -1,0 +1,20 @@
+name: continous_deployement
+
+on: 
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: check out code
+        uses: actions/checkout@v6
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.26.0"
+      - name: build app
+        run: ./scripts/buildprod.sh
